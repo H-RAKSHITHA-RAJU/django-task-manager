@@ -1,0 +1,29 @@
+<!-- templates/registration/login.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; }
+        form { max-width: 400px; margin: 0 auto; padding: 1em; border: 1px solid #ccc; border-radius: 1em; }
+        h2 { text-align: center; }
+        div { margin-bottom: 1em; }
+        label { display: block; margin-bottom: .5em; }
+        input[type="text"], input[type="password"] { width: 100%; padding: .5em; box-sizing: border-box; }
+        button { padding: 0.7em; color: white; background-color: #007BFF; border: none; border-radius: 0.3em; cursor: pointer; width: 100%; }
+        button:hover { background-color: #0056b3; }
+        .signup-link { text-align: center; margin-top: 1em; }
+    </style>
+</head>
+<body>
+    <form method="post">
+        <h2>Login</h2>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Login</button>
+        <div class="signup-link">
+            <p>Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+        </div>
+    </form>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!-- templates/tasks/task_form.html -->
+{% extends 'base.html' %}
+{% load static %} <!-- It's good practice to load static if you ever add CSS files -->
+
+{% block content %}
+    <h2>{% if form.instance.pk %}Edit Task{% else %}Create New Task{% endif %}</h2>
+
+    <form method="post" novalidate> <!-- novalidate prevents browser validation so we can see Django's errors -->
+        {% csrf_token %}
+
+        <!-- === THIS IS THE NEW, IMPORTANT PART === -->
+        {% if form.errors %}
+            <div style="color: red; border: 1px solid red; padding: 1rem; margin-bottom: 1rem; border-radius: 5px;">
+                <p><strong>Please correct the errors below:</strong></p>
+                {{ form.non_field_errors }}
+                <ul>
+                {% for field in form %}
+                    {% if field.errors %}
+                        <li><strong>{{ field.label }}:</strong> {{ field.errors|striptags }}</li>
+                    {% endif %}
+                {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <!-- === END OF NEW PART === -->
+
+        {{ form.as_p }}
+
+        <button type="submit" class="btn">{% if form.instance.pk %}Update Task{% else %}Create Task{% endif %}</button>
+        <a href="{% url 'task-list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+{% endblock %}

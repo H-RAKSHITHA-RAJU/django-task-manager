@@ -1,0 +1,14 @@
+<!-- templates/tasks/task_detail.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>{{ task.title }}</h2>
+    <p><strong>Description:</strong> {{ task.description|linebreaksbr|default:"No description provided." }}</p>
+    <p><strong>Due Date:</strong> {{ task.due_date|date:"F d, Y"|default:"Not set" }}</p>
+    <p><strong>Status:</strong> {% if task.completed %}Completed{% else %}Incomplete{% endif %}</p>
+    <p><strong>Created:</strong> {{ task.created_at|date:"F d, Y" }}</p>
+
+    <hr>
+    <a href="{% url 'task-update' task.pk %}" class="btn btn-secondary">Edit Task</a>
+    <a href="{% url 'task-list' %}" class="btn">Back to List</a>
+{% endblock %}

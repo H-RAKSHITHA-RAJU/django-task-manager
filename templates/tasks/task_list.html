@@ -1,0 +1,37 @@
+<!-- templates/tasks/task_list.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>My Tasks</h1>
+    <a href="{% url 'task-create' %}" class="btn">Create New Task</a>
+    <hr>
+
+    <!-- === ADD THIS FILTERING SECTION === -->
+    <div class="task-filters" style="margin-bottom: 1rem;">
+        <strong>Filter by:</strong>
+        <a href="{% url 'task-list' %}" style="margin-left: 10px;">All Tasks</a>
+        <a href="{% url 'task-list' %}?filter=incomplete" style="margin-left: 10px;">Incomplete</a>
+        <a href="{% url 'task-list' %}?filter=complete" style="margin-left: 10px;">Complete</a>
+    </div>
+    <!-- === END OF FILTERING SECTION === -->
+
+    {% for task in tasks %}
+        <div class="task-item" style="padding: 1rem; border: 1px solid #ddd; margin-bottom: 1rem; border-radius: 5px; {% if task.completed %}background-color: #f0f9f0;{% endif %}">
+            <h3>
+                <a href="{% url 'task-detail' task.pk %}">
+                    {% if task.completed %}
+                        <s>{{ task.title }}</s>
+                    {% else %}
+                        {{ task.title }}
+                    {% endif %}
+                </a>
+            </h3>
+            <p>Due: {{ task.due_date|date:"F d, Y"|default:"No due date" }}</p>
+            <p>Status: {% if task.completed %}Completed{% else %}Incomplete{% endif %}</p>
+            <a href="{% url 'task-update' task.pk %}" class="btn btn-secondary">Edit</a>
+            <a href="{% url 'task-delete' task.pk %}" class="btn btn-danger">Delete</a>
+        </div>
+    {% empty %}
+        <p>You have no tasks yet. Create one!</p>
+    {% endfor %}
+{% endblock %}
