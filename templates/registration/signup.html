@@ -1,37 +1,74 @@
 <!-- templates/registration/signup.html -->
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Sign Up</title>
-    <style>
-        body { font-family: sans-serif; margin: 2em; }
-        form { max-width: 400px; margin: 0 auto; padding: 1em; border: 1px solid #ccc; border-radius: 1em; }
-        h2 { text-align: center; }
-        .form-errors { color: red; }
-        ul { list-style-type: none; padding: 0; }
-        button { padding: 0.7em; color: white; background-color: #28a745; border: none; border-radius: 0.3em; cursor: pointer; width: 100%; }
-        button:hover { background-color: #218838; }
-        .login-link { text-align: center; margin-top: 1em; }
-    </style>
-</head>
-<body>
-    <form method="post">
-        <h2>Sign Up</h2>
-        {% csrf_token %}
+{% extends 'base.html' %}
 
+{% block content %}
+<style>
+    /* No style changes needed, keeping the same look */
+    .signup-container { max-width: 480px; margin: 2rem auto; padding: 2rem; background-color: #ffffff; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+    .signup-container h2 { text-align: center; margin-bottom: 1.5rem; color: #333; }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; color: #555; }
+    .form-control { width: 100%; padding: 0.75rem; font-size: 1rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+    .btn-signup { width: 100%; padding: 0.75rem; font-size: 1rem; color: white; background-color: #28a745; border: none; border-radius: 5px; cursor: pointer; }
+    .login-link { text-align: center; margin-top: 1.5rem; }
+    .alert-danger { padding: 1rem; margin-bottom: 1.5rem; background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; border-radius: 5px; }
+    .field-instructions { padding: 1rem; margin-top: -1rem; margin-bottom: 1.5rem; background-color: #f8f9fa; border: 1px solid #e0e0e0; border-radius: 8px; color: #555; }
+    .field-instructions h4 { margin-top: 0; margin-bottom: 0.5rem; color: #333; }
+    .field-instructions ul { padding-left: 20px; margin-bottom: 0; }
+    .field-instructions li { margin-bottom: 0.5rem; }
+</style>
+
+<div class="signup-container">
+    <h2>Create Your Account</h2>
+    <p style="text-align: center; color: #666; margin-bottom: 2rem;">Fill out the form below to get started.</p>
+
+    <form method="post" novalidate>
+        {% csrf_token %}
+        <!-- Error display block (no changes here) -->
         {% if form.errors %}
-            <div class="form-errors">
-                <p>Please correct the errors below:</p>
-                {{ form.non_field_errors }}
+            <div class="alert-danger">
+                <h4 style="margin-top:0;">Please correct the following errors:</h4>
+                <ul style="padding-left: 20px; margin-bottom: 0;">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                </ul>
             </div>
         {% endif %}
 
-        {{ form.as_p }}
+        <div class="form-group">
+            <label for="id_username">Username</label>
+            <input type="text" name="username" id="id_username" class="form-control" placeholder="e.g., jane_doe" required autofocus>
+        </div>
 
-        <button type="submit">Sign Up</button>
+        <div class="form-group">
+            <label for="id_password1">Password</label>
+            <!-- THE FIX: The name attribute MUST be "password1" for Django's form -->
+            <input type="password" name="password1" id="id_password1" class="form-control" placeholder="Choose a password" required>
+        </div>
+
+        <!-- === UPDATED AND SIMPLIFIED INSTRUCTIONS to match the new rules === -->
+        <div class="field-instructions">
+            <h4>Basic Password Rules:</h4>
+            <ul>
+                <li>Your password must be at least 8 characters long.</li>
+                <li>Your password cannot be all numbers.</li>
+            </ul>
+        </div>
+
+        <div class="form-group">
+            <label for="id_password2">Confirm Password</label>
+            <!-- THE FIX: The name attribute MUST be "password2" for Django's form -->
+            <input type="password" name="password2" id="id_password2" class="form-control" placeholder="Enter the password again" required>
+        </div>
+
+        <button type="submit" class="btn-signup">Create Account</button>
+
         <div class="login-link">
-            <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+            Already have an account? <a href="{% url 'login' %}">Login here</a>
         </div>
     </form>
-</body>
-</html>
+</div>
+{% endblock %}
